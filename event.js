@@ -1,5 +1,5 @@
 
-/* a Customable Event JavaScript library for modern explorer */
+/* a Customable non-blocked Event JavaScript library for modern explorer */
 /*
 * EventEmitter
 * @options : { bubbles: <Boolean>, cancelable: <Boolean> }
@@ -8,11 +8,6 @@
 * .on @eName, @cb(@e): @data is the attribute "detail" of argument @e of cb 
 * .onOnce @eName, @cb(@e): the eName event can only triggered one time 
 * .removeListener @eName, @cb: remove the given listener for eName
-*
-* * NOTICE: the whole html page share the variable "_proto",
-*           so every object create by EventEmitter share _proto,
-*           once the same name event were binded, 
-*           all binding listener for this event will execute when it triggers
 *
 */
 (function (global) {
