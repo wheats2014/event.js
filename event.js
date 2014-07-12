@@ -19,6 +19,7 @@
 
   var EventEmitter = function (options) {
     this.MAXListener = options ? (options.MAXListener || 100) : 100;
+    this.listener = 0;
     this.config = options ? 
       (options.config || { bubbles: false, cancelable: false }) : { bubbles: false, cancelable: false };
     
@@ -49,16 +50,23 @@
 
   EventEmitter.prototype.on = function (eName, cb) {
     var _self = this;
+    if (_self.listener + 1 > _self.MAXListener)
+      return new Error('up to MAX Listeners limit');
     _self._proto.addEventListener(eName, cb, false);
+    _self.listener++;
   };
 
   EventEmitter.prototype.onOnce = function (eName, cb) {
     var _self = this;
+    if (_self.listener + 1 > _self.MAXListener)
+      return new Error('up to MAX Listeners limit');
     var handler = function (e) {
       cb(e);
       _self._proto.removeEventListener(eName, handler);
+      _self.listener--;
     };
     _self._proto.addEventListener(eName, handler, false);
+    _self.listener++;
   };
 
   EventEmitter.prototype.removeListener = function (eName, cb) {

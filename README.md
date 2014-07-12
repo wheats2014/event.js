@@ -34,8 +34,11 @@ other usages && options:
 
   the options is an object, all the events follow this setting:
   {
-    bubbles: <Boolean>
-    cancelable: <Boolean>
+    MAXListener: <Number>
+    config: {
+      bubbles: <Boolean>
+      cancelable: <Boolean>
+    }
   }
 
   method:
