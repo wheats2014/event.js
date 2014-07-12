@@ -1,5 +1,5 @@
 
-/* a Customable non-blocked Event JavaScript library for modern explorer */
+/* a Customable UI-non-blocking Event JavaScript library for modern explorer */
 /*
 * EventEmitter
 * @options : { bubbles: <Boolean>, cancelable: <Boolean> }
@@ -20,8 +20,7 @@
   var EventEmitter = function (options) {
     this.MAXListener = options ? (options.MAXListener || 100) : 100;
     this.config = options ? 
-      (options.config || { bubbles: false, cancelable: false }) : 
-      { bubbles: false, cancelable: false };
+      (options.config || { bubbles: false, cancelable: false }) : { bubbles: false, cancelable: false };
     
     // make the _proto property private and readonly
     Object.defineProperty(this, '_proto', {
