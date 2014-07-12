@@ -1,7 +1,7 @@
 event.js V0.0.2
 ===
 
-a async & non-blocked event-customable frontend library
+a async & UI-non-blocking event-customable frontend library
 
 it can create JavaScript Obejcts obtain HTMLElement's feature---Event Driven
 
