@@ -9,7 +9,7 @@ all the events' workflow is providen by DOM Event Model
 
 example:
 
-```
+```js
 
   var spore = new EventEmitter();
 
@@ -28,7 +28,7 @@ example:
 
 other usages && options:
 
-```
+```js
 
   EventEmitter(options)
 
