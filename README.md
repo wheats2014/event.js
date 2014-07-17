@@ -1,4 +1,4 @@
-event.js V0.0.2
+event.js V0.0.3
 ===
 
 a async & UI-non-blocking event-customable frontend library
@@ -13,12 +13,11 @@ example:
 
   var spore = new EventEmitter();
 
-  spore.on('growup', function (e) {
-    var data = e.detail;
+  spore.on('growup', function (data) {
     console.log(data);
   });
 
-  spore.on('die', function (e) {
+  spore.on('die', function (data) {
     // ...
   });
 

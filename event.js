@@ -15,14 +15,11 @@
   if (!global.CustomEvent)
     throw new Error('your browser doesnt support custom events');
 
-  //var _proto = global.document.createElement('i');
-
   var EventEmitter = function (options) {
     this.MAXListener = options ? (options.MAXListener || 100) : 100;
     this.listener = 0;
-    this.config = options ? 
-      (options.config || { bubbles: false, cancelable: false }) : { bubbles: false, cancelable: false };
-    
+    this.bubbles = options ? (options.bubbles || false) : false;
+    this.cancelable = options ? (options.cancelable || false) : false;
     // make the _proto property private and readonly
     Object.defineProperty(this, '_proto', {
       value: global.document.createElement('i'),
@@ -38,9 +35,9 @@
   EventEmitter.prototype.emit = function (eName, data) {
     var _self = this;
     var settings = {};
-    for (var i in _self.config)
-      if (_self.config.hasOwnProperty(i))
-        settings[i] = _self.config[i];
+    for (var i in _self)
+      if (_self.hasOwnProperty(i))
+        settings[i] = _self[i];
     settings.detail = data;
 
     // create a new event with above settings
@@ -52,7 +49,12 @@
     var _self = this;
     if (_self.listener + 1 > _self.MAXListener)
       return new Error('up to MAX Listeners limit');
-    _self._proto.addEventListener(eName, cb, false);
+
+    // ref to the real callback for removing operation
+    cb._supercb = function (e) {
+      cb(e.detail);
+    };
+    _self._proto.addEventListener(eName, cb._supercb, false);
     _self.listener++;
   };
 
@@ -60,18 +62,19 @@
     var _self = this;
     if (_self.listener + 1 > _self.MAXListener)
       return new Error('up to MAX Listeners limit');
-    var handler = function (e) {
-      cb(e);
-      _self._proto.removeEventListener(eName, handler);
+
+    cb._supercb = function (e) {
+      cb(e.detail);
+      _self._proto.removeEventListener(eName, cb._supercb);
       _self.listener--;
     };
-    _self._proto.addEventListener(eName, handler, false);
+    _self._proto.addEventListener(eName, cb._supercb, false);
     _self.listener++;
   };
 
   EventEmitter.prototype.removeListener = function (eName, cb) {
     var _self = this;
-    _self._proto.removeEventListener(eName, cb);
+    _self._proto.removeEventListener(eName, cb._supercb);
   };
 
   global.EventEmitter = EventEmitter;
