@@ -1,4 +1,4 @@
-event.js V0.0.3
+event.js V0.0.4
 ===
 
 a async & UI-non-blocking event-customable frontend library
@@ -7,7 +7,17 @@ it can create JavaScript Obejcts obtain HTMLElement's feature---Event Driven
 
 all the events' workflow is providen by DOM Event Model
 
-example:
+##### Notice!
+
+This module is only available in the web browser!
+
+##### install:
+
+```shell
+npm install event.js
+```
+
+##### example:
 
 ```js
 
@@ -25,7 +35,7 @@ example:
 
 ```
 
-other usages && options:
+##### other usages && options:
 
 ```js
 
