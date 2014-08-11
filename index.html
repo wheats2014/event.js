@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=640">
+
+    <link rel="stylesheet" href="stylesheets/core.css" media="screen">
+    <link rel="stylesheet" href="stylesheets/mobile.css" media="handheld, only screen and (max-device-width:640px)">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+
+    <script type="text/javascript" src="javascripts/modernizr.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="javascripts/headsmart.min.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function () {
+        $('#main_content').headsmart()
+      })
+    </script>
+    <title>Event.js by abbshr</title>
+  </head>
+
+  <body>
+    <a id="forkme_banner" href="https://github.com/abbshr/event.js">View on GitHub</a>
+    <div class="shell">
+
+      <header>
+        <span class="ribbon-outer">
+          <span class="ribbon-inner">
+            <h1>Event.js</h1>
+            <h2>translate any object to EventEmitter in browser</h2>
+          </span>
+          <span class="left-tail"></span>
+          <span class="right-tail"></span>
+        </span>
+      </header>
+
+      <section id="downloads">
+        <span class="inner">
+          <a href="https://github.com/abbshr/event.js/zipball/master" class="zip"><em>download</em> .ZIP</a><a href="https://github.com/abbshr/event.js/tarball/master" class="tgz"><em>download</em> .TGZ</a>
+        </span>
+      </section>
+
+
+      <span class="banner-fix"></span>
+
+
+      <section id="main_content">
+        <h1>
+<a name="eventjs-v005" class="anchor" href="#eventjs-v005"><span class="octicon octicon-link"></span></a>event.js V0.0.5</h1>
+
+<p>a async &amp; UI-non-blocking event-customable frontend library</p>
+
+<p>it can create JavaScript Obejcts obtain HTMLElement's feature---Event Driven</p>
+
+<p>all the events' workflow is providen by DOM Event Model</p>
+
+<h5>
+<a name="notice" class="anchor" href="#notice"><span class="octicon octicon-link"></span></a>Notice!</h5>
+
+<p>This module is only available in web browser!</p>
+
+<h5>
+<a name="install" class="anchor" href="#install"><span class="octicon octicon-link"></span></a>install:</h5>
+
+<pre lang="shell"><code>npm install event.js
+</code></pre>
+
+<h5>
+<a name="example" class="anchor" href="#example"><span class="octicon octicon-link"></span></a>example:</h5>
+
+<div class="highlight highlight-js"><pre>
+  <span class="kd">var</span> <span class="nx">spore</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">EventEmitter</span><span class="p">();</span>
+
+  <span class="nx">spore</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'growup'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+  <span class="p">});</span>
+
+  <span class="nx">spore</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'die'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// ...</span>
+  <span class="p">});</span>
+
+  <span class="nx">spore</span><span class="p">.</span><span class="nx">emit</span><span class="p">(</span><span class="s1">'born'</span><span class="p">,</span> <span class="p">{</span> <span class="nx">size</span><span class="o">:</span> <span class="mf">0.05</span><span class="p">,</span> <span class="nx">color</span><span class="o">:</span> <span class="nx">blue</span> <span class="p">});</span>
+
+</pre></div>
+
+<h5>
+<a name="other-usages--options" class="anchor" href="#other-usages--options"><span class="octicon octicon-link"></span></a>other usages &amp;&amp; options:</h5>
+
+<div class="highlight highlight-js"><pre>
+  <span class="nx">EventEmitter</span><span class="p">(</span><span class="nx">options</span><span class="p">)</span>
+
+  <span class="nx">the</span> <span class="nx">options</span> <span class="nx">is</span> <span class="nx">an</span> <span class="nx">object</span><span class="p">,</span> <span class="nx">all</span> <span class="nx">the</span> <span class="nx">events</span> <span class="nx">follow</span> <span class="k">this</span> <span class="nx">setting</span><span class="o">:</span>
+  <span class="p">{</span>
+    <span class="nx">MAXListener</span><span class="o">:</span> <span class="o">&lt;</span><span class="nb">Number</span><span class="o">&gt;</span><span class="p">,</span>
+    <span class="nx">bubbles</span><span class="o">:</span> <span class="o">&lt;</span><span class="nb">Boolean</span><span class="o">&gt;</span><span class="p">,</span>
+    <span class="nx">cancelable</span><span class="o">:</span> <span class="o">&lt;</span><span class="nb">Boolean</span><span class="o">&gt;</span>
+  <span class="p">}</span>
+
+  <span class="nx">method</span><span class="o">:</span>
+    <span class="p">.</span><span class="nx">emit</span><span class="p">()</span>
+    <span class="p">.</span><span class="nx">on</span><span class="p">()</span>
+    <span class="p">.</span><span class="nx">onOnce</span><span class="p">()</span>
+    <span class="p">.</span><span class="nx">removeListener</span><span class="p">()</span>
+</pre></div>
+      </section>
+
+      <footer>
+        <span class="ribbon-outer">
+          <span class="ribbon-inner">
+            <p>this project by <a href="https://github.com/abbshr">abbshr</a> can be found on <a href="https://github.com/abbshr/event.js">GitHub</a></p>
+          </span>
+          <span class="left-tail"></span>
+          <span class="right-tail"></span>
+        </span>
+        <p>Generated with <a href="http://pages.github.com">GitHub Pages</a> using Merlot</p>
+        <span class="octocat"></span>
+      </footer>
+
+    </div>
+
+    
+  </body>
+</html>
