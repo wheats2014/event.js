@@ -1,64 +1,77 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
-    <meta charset='utf-8'>
+    <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <meta name="viewport" content="width=640">
-
-    <link rel="stylesheet" href="stylesheets/core.css" media="screen">
-    <link rel="stylesheet" href="stylesheets/mobile.css" media="handheld, only screen and (max-device-width:640px)">
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-
-    <script type="text/javascript" src="javascripts/modernizr.js"></script>
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    <script type="text/javascript" src="javascripts/headsmart.min.js"></script>
-    <script type="text/javascript">
-      $(document).ready(function () {
-        $('#main_content').headsmart()
-      })
-    </script>
     <title>Event.js by abbshr</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
   </head>
-
   <body>
-    <a id="forkme_banner" href="https://github.com/abbshr/event.js">View on GitHub</a>
-    <div class="shell">
-
+    <div class="wrapper">
       <header>
-        <span class="ribbon-outer">
-          <span class="ribbon-inner">
-            <h1>Event.js</h1>
-            <h2>translate any object to EventEmitter in browser</h2>
-          </span>
-          <span class="left-tail"></span>
-          <span class="right-tail"></span>
-        </span>
+        <h1>Event.js</h1>
+        <p>translate any object to EventEmitter in browser</p>
+        <p class="view"><a href="https://github.com/abbshr/event.js">View the Project on GitHub <small>abbshr/event.js</small></a></p>
+        <ul>
+          <li><a href="https://github.com/abbshr/event.js/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/abbshr/event.js/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/abbshr/event.js">View On <strong>GitHub</strong></a></li>
+        </ul>
       </header>
-
-      <section id="downloads">
-        <span class="inner">
-          <a href="https://github.com/abbshr/event.js/zipball/master" class="zip"><em>download</em> .ZIP</a><a href="https://github.com/abbshr/event.js/tarball/master" class="tgz"><em>download</em> .TGZ</a>
-        </span>
-      </section>
-
-
-      <span class="banner-fix"></span>
-
-
-      <section id="main_content">
+      <section>
         <h1>
-<a name="eventjs-v005" class="anchor" href="#eventjs-v005"><span class="octicon octicon-link"></span></a>event.js V0.0.5</h1>
+<a name="v005" class="anchor" href="#v005"><span class="octicon octicon-link"></span></a>V0.0.5</h1>
 
-<p>a async &amp; UI-non-blocking event-customable frontend library</p>
+<p>event.js是一个事件驱动的无UI阻塞的浏览器端JavaScript库。</p>
 
-<p>it can create JavaScript Obejcts obtain HTMLElement's feature---Event Driven</p>
+<p>设计上借鉴了Node.js的EventEmitter，用法基本相同。</p>
 
-<p>all the events' workflow is providen by DOM Event Model</p>
+<p>通过它创建的对象可以获得HTML DOM专有的<strong>事件驱动</strong>支持。</p>
+
+<p>event.js内所有的事件工作流均由DOM Event独家特约提供。</p>
+
+<h5>
+<a name="%E5%8E%9F%E7%90%86" class="anchor" href="#%E5%8E%9F%E7%90%86"><span class="octicon octicon-link"></span></a>原理</h5>
+
+<p>我们知道浏览器端的JavaScript和UI渲染是在同一线程下工作的，因而运算密集型的JavaScript代码会导致线程的阻塞。在原来的Pub/Sub模式中，都是用同一线程下的代码模拟事件的监听和触发。因为模拟的事件无法像真正的DOM事件一样能异步的触发，这就导致了一旦触发事件后运算量增大，UI的渲染以及其他正在进行的工作将受到严重影响：</p>
+
+<div class="highlight highlight-js"><pre><span class="err">以前的</span><span class="nx">Pub</span><span class="o">/</span><span class="nx">Sub</span><span class="err">模式：</span>
+<span class="nx">worker</span><span class="p">.</span><span class="nx">on</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">cb</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">_stacks</span><span class="p">[</span><span class="nx">e</span><span class="p">].</span><span class="nx">push</span><span class="p">(</span><span class="nx">cb</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="nx">worker</span><span class="p">.</span><span class="nx">emit</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">_stack</span><span class="p">[</span><span class="nx">e</span><span class="p">].</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">cb</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">cb</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+  <span class="p">});</span>
+<span class="p">};</span>
+<span class="p">...</span>
+<span class="nx">worker</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'e'</span><span class="p">,</span> <span class="nx">cb1</span><span class="p">);</span>
+<span class="nx">worker</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'e'</span><span class="p">,</span> <span class="nx">cb2</span><span class="p">);</span>
+<span class="nx">worker</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'e'</span><span class="p">,</span> <span class="nx">cb3</span><span class="p">);</span>
+<span class="p">...</span>
+<span class="p">...</span>
+<span class="c1">// 因为事件并没有压入事件队列，所以这部分代码等同于普通代码，一旦事件触发，就必须立即运行回调函数。</span>
+<span class="nx">worker</span><span class="p">.</span><span class="nx">emit</span><span class="p">(</span><span class="s1">'e'</span><span class="p">,</span> <span class="s1">'data'</span><span class="p">);</span>
+</pre></div>
+
+<p>借用了浏览器提供的正宗Custom-Event-Driven，相比原始的方法性能更好：</p>
+
+<div class="highlight highlight-js"><pre><span class="c1">// 由于使用的是真正的事件，这里触发的事件将会压入事件队列，等待处理，直到普通代码全部执行完毕再执行。</span>
+<span class="nx">worker</span><span class="p">.</span><span class="nx">emit</span><span class="p">(</span><span class="s1">'e'</span><span class="p">,</span> <span class="s1">'data'</span><span class="p">);</span>
+</pre></div>
 
 <h5>
 <a name="notice" class="anchor" href="#notice"><span class="octicon octicon-link"></span></a>Notice!</h5>
 
-<p>This module is only available in web browser!</p>
+<p>该模块仅仅在web浏览器中可用，并不适用于Node环境（Node原生提供了EventEmitter，不解释）</p>
 
 <h5>
 <a name="install" class="anchor" href="#install"><span class="octicon octicon-link"></span></a>install:</h5>
@@ -67,7 +80,7 @@
 </code></pre>
 
 <h5>
-<a name="example" class="anchor" href="#example"><span class="octicon octicon-link"></span></a>example:</h5>
+<a name="%E4%BE%8B%E5%AD%90" class="anchor" href="#%E4%BE%8B%E5%AD%90"><span class="octicon octicon-link"></span></a>例子</h5>
 
 <div class="highlight highlight-js"><pre>
   <span class="kd">var</span> <span class="nx">spore</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">EventEmitter</span><span class="p">();</span>
@@ -85,40 +98,31 @@
 </pre></div>
 
 <h5>
-<a name="other-usages--options" class="anchor" href="#other-usages--options"><span class="octicon octicon-link"></span></a>other usages &amp;&amp; options:</h5>
+<a name="%E5%8F%82%E8%80%83%E5%A4%A7%E5%85%A8" class="anchor" href="#%E5%8F%82%E8%80%83%E5%A4%A7%E5%85%A8"><span class="octicon octicon-link"></span></a>参考大全</h5>
 
 <div class="highlight highlight-js"><pre>
   <span class="nx">EventEmitter</span><span class="p">(</span><span class="nx">options</span><span class="p">)</span>
 
-  <span class="nx">the</span> <span class="nx">options</span> <span class="nx">is</span> <span class="nx">an</span> <span class="nx">object</span><span class="p">,</span> <span class="nx">all</span> <span class="nx">the</span> <span class="nx">events</span> <span class="nx">follow</span> <span class="k">this</span> <span class="nx">setting</span><span class="o">:</span>
+  <span class="err">通过配置</span><span class="nx">options</span><span class="err">对象，可以自定义每个</span><span class="nx">EventEmitter</span><span class="err">实例。</span>
   <span class="p">{</span>
     <span class="nx">MAXListener</span><span class="o">:</span> <span class="o">&lt;</span><span class="nb">Number</span><span class="o">&gt;</span><span class="p">,</span>
     <span class="nx">bubbles</span><span class="o">:</span> <span class="o">&lt;</span><span class="nb">Boolean</span><span class="o">&gt;</span><span class="p">,</span>
     <span class="nx">cancelable</span><span class="o">:</span> <span class="o">&lt;</span><span class="nb">Boolean</span><span class="o">&gt;</span>
   <span class="p">}</span>
 
-  <span class="nx">method</span><span class="o">:</span>
+  <span class="err">实例方法</span><span class="o">:</span>
     <span class="p">.</span><span class="nx">emit</span><span class="p">()</span>
     <span class="p">.</span><span class="nx">on</span><span class="p">()</span>
-    <span class="p">.</span><span class="nx">onOnce</span><span class="p">()</span>
+    <span class="p">.</span><span class="nx">once</span><span class="p">()</span>
     <span class="p">.</span><span class="nx">removeListener</span><span class="p">()</span>
 </pre></div>
       </section>
-
-      <footer>
-        <span class="ribbon-outer">
-          <span class="ribbon-inner">
-            <p>this project by <a href="https://github.com/abbshr">abbshr</a> can be found on <a href="https://github.com/abbshr/event.js">GitHub</a></p>
-          </span>
-          <span class="left-tail"></span>
-          <span class="right-tail"></span>
-        </span>
-        <p>Generated with <a href="http://pages.github.com">GitHub Pages</a> using Merlot</p>
-        <span class="octocat"></span>
-      </footer>
-
     </div>
-
+    <footer>
+      <p>Project maintained by <a href="https://github.com/abbshr">abbshr</a></p>
+      <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+    </footer>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
     
   </body>
 </html>
