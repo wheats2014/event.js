@@ -1,4 +1,4 @@
-event.js V0.0.6
+event.js V0.1.0
 ===
 
 a async & UI-non-blocking event-customable frontend library

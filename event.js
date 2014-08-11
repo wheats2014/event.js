@@ -1,11 +1,11 @@
 
-/* a Customable UI-non-blocking Event JavaScript library for modern explorer */
+/* a Customable async UI-non-blocking Event library for browser */
 /*
 * EventEmitter
-* @options : { bubbles: <Boolean>, cancelable: <Boolean> }
+* @options : { MAXListener: <Number> }
 * method:
 * .emit @eName, @data
-* .on @eName, @cb(@e): @data is the attribute "detail" of argument @e of cb 
+* .on @eName, @cb(@e): @data
 * .once @eName, @cb(@e): the eName event can only triggered one time 
 * .removeListener @eName, @cb: remove the given listener for eName
 *
@@ -18,31 +18,22 @@
   var EventEmitter = function (options) {
     this.MAXListener = options ? (options.MAXListener || 100) : 100;
     this.listener = 0;
-    this.bubbles = options ? (options.bubbles || false) : false;
-    this.cancelable = options ? (options.cancelable || false) : false;
-    // make the _proto property private and readonly
-    Object.defineProperty(this, '_proto', {
-      value: global.document.createElement('i'),
+    // make the _eventStack property private and readonly
+    Object.defineProperty(this, '_eventStack', {
+      value: {},
       writeable: false,
       enumerable: false,
       configurable: false
     });
-
-    // freeze the core event object
-    Object.freeze(this._proto);
   };
 
   EventEmitter.prototype.emit = function (eName, data) {
     var _self = this;
-    var settings = {};
-    for (var i in _self)
-      if (_self.hasOwnProperty(i))
-        settings[i] = _self[i];
-    settings.detail = data;
-
-    // create a new event with above settings
-    var event = new CustomEvent(eName, settings);
-    _self._proto.dispatchEvent(event);
+    setTimeout(function () {
+      _self._eventStack[eName] && _self._eventStack[eName].forEach(function (cb) {
+        cb(data);
+      });
+    });
   };
 
   EventEmitter.prototype.on = function (eName, cb) {
@@ -52,9 +43,10 @@
 
     // ref to the real callback for removing operation
     cb._supercb = function (e) {
-      cb(e.detail);
+      cb(e);
     };
-    _self._proto.addEventListener(eName, cb._supercb, false);
+    _self._eventStack[eName] ?
+      _self._eventStack[eName].push(cb._supercb) : _self._eventStack[eName] = [cb._supercb];
     _self.listener++;
   };
 
@@ -64,17 +56,22 @@
       return new Error('up to MAX Listeners limit');
 
     cb._supercb = function (e) {
-      cb(e.detail);
-      _self._proto.removeEventListener(eName, cb._supercb);
+      cb(e);
+      _self.removeListener(eName, cb);
       _self.listener--;
     };
-    _self._proto.addEventListener(eName, cb._supercb, false);
+    _self._eventStack[eName] ?
+      _self._eventStack[eName].push(cb._supercb) : _self._eventStack[eName] = [cb._supercb];
     _self.listener++;
   };
 
   EventEmitter.prototype.removeListener = function (eName, cb) {
     var _self = this;
-    _self._proto.removeEventListener(eName, cb._supercb);
+    var cb_index = _self._eventStack[eName] ? _self._eventStack[eName].indexOf(cb._supercb) : -1;
+    if (cb_index == -1) 
+      return;
+    else
+      _self._eventStack[eName].splice(cb_index, 1);
   };
 
   global.EventEmitter = EventEmitter;
