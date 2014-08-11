@@ -6,7 +6,7 @@
 * method:
 * .emit @eName, @data
 * .on @eName, @cb(@e): @data is the attribute "detail" of argument @e of cb 
-* .onOnce @eName, @cb(@e): the eName event can only triggered one time 
+* .once @eName, @cb(@e): the eName event can only triggered one time 
 * .removeListener @eName, @cb: remove the given listener for eName
 *
 */
@@ -58,7 +58,7 @@
     _self.listener++;
   };
 
-  EventEmitter.prototype.onOnce = function (eName, cb) {
+  EventEmitter.prototype.once = function (eName, cb) {
     var _self = this;
     if (_self.listener + 1 > _self.MAXListener)
       return new Error('up to MAX Listeners limit');

@@ -1,4 +1,4 @@
-event.js V0.0.5
+event.js V0.0.6
 ===
 
 a async & UI-non-blocking event-customable frontend library
@@ -51,6 +51,6 @@ npm install event.js
   method:
     .emit()
     .on()
-    .onOnce()
+    .once()
     .removeListener()
 ```
